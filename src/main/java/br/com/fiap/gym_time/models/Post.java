@@ -1,7 +1,6 @@
 package br.com.fiap.gym_time.models;
 
 import java.time.LocalDate;
-import java.util.Random;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,7 +18,7 @@ public class Post {
     private Long id;
 
     @NotNull
-    private String user;
+    private String account;
     private String urlImage;
 
     @NotBlank(message = "O conteúdo não pode ser vazio")

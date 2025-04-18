@@ -1,12 +1,14 @@
 package br.com.fiap.gym_time.controller;
 
-import java.util.List;
-
 import org.slf4j.Logger;
- import org.slf4j.LoggerFactory;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,7 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import br.com.fiap.gym_time.models.Post;
+import br.com.fiap.gym_time.models.PostFilter;
 import br.com.fiap.gym_time.repository.PostRepository;
+import br.com.fiap.gym_time.specification.PostSpecification;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -37,8 +41,10 @@ public class PostController {
     // Get all posts
     @GetMapping()
     @Cacheable("posts")
-    public List<Post> getPosts() {
-        return repository.findAll();
+    public Page<Post> getPosts(  PostFilter filter,
+    @PageableDefault(size = 10, sort = "date", direction = Direction.DESC) Pageable pageable) {
+        var specification = PostSpecification.withFilters(filter);
+        return repository.findAll(specification, pageable);
     }
     
     // Create a new post

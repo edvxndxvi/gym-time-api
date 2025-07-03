@@ -13,11 +13,11 @@ import br.com.fiap.gym_time.models.Post;
 import br.com.fiap.gym_time.repository.AccountRepository;
 import br.com.fiap.gym_time.repository.PostRepository;
 import jakarta.annotation.PostConstruct;
-import lombok.experimental.var;
+
 
 @Configuration
 public class DatabaseSeeder {
-    
+
     @Autowired
     private AccountRepository accountRepository;
 

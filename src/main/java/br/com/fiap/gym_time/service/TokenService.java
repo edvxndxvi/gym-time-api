@@ -15,25 +15,28 @@ import br.com.fiap.gym_time.models.UserRole;
 @Service
 public class TokenService {
 
-    private Instant expiresAt = LocalDateTime.now().plusDays(1).toInstant(ZoneOffset.ofHours(-3));
+    private Instant expiresAt = LocalDateTime.now()
+            .plusDays(1)
+            .toInstant(ZoneOffset.ofHours(-3));
 
     private Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
 
     public String createToken(User user){
         return JWT.create()
-            .withSubject(user.getId().toString())
-            .withClaim("email", user.getEmail())
-            .withClaim("role", user.getRole().toString())
-            .withExpiresAt(expiresAt)
-            .sign(algorithm);
+                .withSubject(user.getId().toString())
+                .withClaim("email", user.getEmail())
+                .withClaim("role", user.getRole().toString())
+                .withExpiresAt(expiresAt)
+                .sign(algorithm);
     }
 
     public User getUserFromToken(String jwt){
         var jwtVerifier = JWT.require(algorithm).build().verify(jwt);
         return User.builder()
-            .id(Long.parseLong(jwtVerifier.getSubject()))
-            .email(jwtVerifier.getClaim("email").toString())
-            .role(UserRole.ADMIN)
-            .build();
+                .id(Long.parseLong(jwtVerifier.getSubject()))
+                .email(jwtVerifier.getClaim("email").asString())
+                .role(UserRole.valueOf(jwtVerifier.getClaim("role").asString()))
+                .build();
     }
 }
+

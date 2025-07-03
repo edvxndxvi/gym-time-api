@@ -1,6 +1,7 @@
 package br.com.fiap.gym_time.config;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,30 +24,36 @@ public class AuthFilter extends OncePerRequestFilter{
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        
+
         var header = request.getHeader("Authorization");
-        if(header == null ) {
+        // Se não tiver header, apenas segue o fluxo (ex: endpoint público)
+        if (header == null || header.isBlank()) {
             filterChain.doFilter(request, response);
             return;
         }
 
+        // Se tiver header mas não for Bearer, ignora autenticação (não lança 401)
         if (!header.startsWith("Bearer ")) {
-           response.setStatus(401);
-           response.getWriter().write("""
-                {"message": "Header deve iniciar com Bearer"}
-           """);
-           return;
+            filterChain.doFilter(request, response);
+            return;
         }
 
         var jwt = header.replace("Bearer ", "");
 
-        var user = tokenService.getUserFromToken(jwt);
+        try {
+            var user = tokenService.getUserFromToken(jwt);
 
-        var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        
+            if (user != null) {
+                var authentication = new UsernamePasswordAuthenticationToken(
+                        user, null, user.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+
+        } catch (Exception e) {
+            Logger.getLogger(AuthFilter.class.getName()).log(java.util.logging.Level.SEVERE, null, e);
+        }
+
         filterChain.doFilter(request, response);
-
     }
     
 }

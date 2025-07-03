@@ -1,5 +1,6 @@
 package br.com.fiap.gym_time.controller;
 
+import br.com.fiap.gym_time.models.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ public class UserController {
     @PostMapping
     public User create(@RequestBody User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(UserRole.ADMIN);
         return repository.save(user);
     }
     

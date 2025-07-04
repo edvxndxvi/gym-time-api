@@ -8,10 +8,10 @@ import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
-import br.com.fiap.gym_time.models.Account;
 import br.com.fiap.gym_time.models.Post;
-import br.com.fiap.gym_time.repository.AccountRepository;
+import br.com.fiap.gym_time.models.User;
 import br.com.fiap.gym_time.repository.PostRepository;
+import br.com.fiap.gym_time.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 
 
@@ -19,7 +19,7 @@ import jakarta.annotation.PostConstruct;
 public class DatabaseSeeder {
 
     @Autowired
-    private AccountRepository accountRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private PostRepository postRepository;
@@ -27,11 +27,11 @@ public class DatabaseSeeder {
     @PostConstruct
     public void init() {
 
-        var joaoAccount = Account.builder().name("Jota").username("jvtips").profilePicURL("https://github.com/joaosilvaz.png").build();
-        var rafaAccount = Account.builder().name("Romanini").username("roma").profilePicURL("https://github.com/rafaelromanini.png").build();
-        var edvanAccount = Account.builder().name("Ed").username("edvxndxvi").profilePicURL("https://github.com/edvxndxvi.png").build();
+        var joaoAccount = User.builder().name("Jota").username("jvtips").profilePicURL("https://github.com/joaosilvaz.png").password("12443").build();
+        var rafaAccount = User.builder().name("Romanini").username("roma").profilePicURL("https://github.com/rafaelromanini.png").password("12443").build();
+        var edvanAccount = User.builder().name("Ed").username("edvxndxvi").profilePicURL("https://github.com/edvxndxvi.png").password("12443").build();
 
-        accountRepository.saveAll(List.of(joaoAccount, rafaAccount, edvanAccount));
+        userRepository.saveAll(List.of(joaoAccount, rafaAccount, edvanAccount));
 
 
         List<String> contents = List.of(
@@ -47,7 +47,7 @@ public class DatabaseSeeder {
             "Foco, força e fé no treino!"
         );
 
-        List<Account> accounts = accountRepository.findAll();
+        List<User> users = userRepository.findAll();
         var random = new Random();
         var posts = new ArrayList<Post>();
 
@@ -59,7 +59,7 @@ public class DatabaseSeeder {
                     .likes((long) random.nextInt(100))
                     .comments((long) random.nextInt(50))
                     .shares((long) random.nextInt(30))
-                    .account(accounts.get(random.nextInt(accounts.size())))
+                    .user(users.get(random.nextInt(users.size())))
                     .build()
             );
         }

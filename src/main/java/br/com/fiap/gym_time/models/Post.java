@@ -37,5 +37,5 @@ public class Post {
     private Long shares;
 
     @ManyToOne
-    private Account account;
+    private User user;
 }

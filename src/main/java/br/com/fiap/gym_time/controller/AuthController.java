@@ -31,7 +31,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public Token login(@RequestBody Credentials credentials) {
-
+        
         System.out.println(">>> Entrou no login com email: " + credentials.email());
         User user = (User) authService.loadUserByUsername(credentials.email());
         if(!passwordEncoder.matches(credentials.password(), user.getPassword())) {

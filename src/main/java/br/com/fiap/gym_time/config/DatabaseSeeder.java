@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 
 import br.com.fiap.gym_time.models.Post;
 import br.com.fiap.gym_time.models.User;
+import br.com.fiap.gym_time.models.UserRole;
 import br.com.fiap.gym_time.repository.PostRepository;
 import br.com.fiap.gym_time.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
@@ -27,9 +28,9 @@ public class DatabaseSeeder {
     @PostConstruct
     public void init() {
 
-        var joaoAccount = User.builder().name("Jota").username("jvtips").profilePicURL("https://github.com/joaosilvaz.png").password("12443").build();
-        var rafaAccount = User.builder().name("Romanini").username("roma").profilePicURL("https://github.com/rafaelromanini.png").password("12443").build();
-        var edvanAccount = User.builder().name("Ed").username("edvxndxvi").profilePicURL("https://github.com/edvxndxvi.png").password("12443").build();
+        var joaoAccount = User.builder().name("Jota").username("jvtips").profilePicURL("https://github.com/joaosilvaz.png").password("12443").role(UserRole.USER).build();
+        var rafaAccount = User.builder().name("Romanini").username("roma").profilePicURL("https://github.com/rafaelromanini.png").password("12443").role(UserRole.USER).build();
+        var edvanAccount = User.builder().name("Ed").username("edvxndxvi").profilePicURL("https://github.com/edvxndxvi.png").password("12443").role(UserRole.USER).build();
 
         userRepository.saveAll(List.of(joaoAccount, rafaAccount, edvanAccount));
 

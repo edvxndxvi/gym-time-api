@@ -42,9 +42,15 @@ public class PostController {
     @GetMapping()
     @Cacheable("posts")
     public Page<Post> getPosts(  PostFilter filter,
-    @PageableDefault(size = 10, sort = "date", direction = Direction.DESC) Pageable pageable) {
-        var specification = PostSpecification.withFilters(filter);
-        return repository.findAll(specification, pageable);
+    @PageableDefault(size = 10, sort = "date", direction = Direction.ASC) Pageable pageable) {
+        boolean hasFilter = filter.content() != null || filter.date() != null;
+
+        if(hasFilter){
+            var specification = PostSpecification.withFilters(filter);
+            return repository.findAll(specification, pageable);
+        }
+
+        return repository.findAll(pageable);
     }
     
     // Create a new post
